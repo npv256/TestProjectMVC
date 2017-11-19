@@ -12,7 +12,7 @@ namespace Domain
         [Key]
         public long Id { get; set; }
         public string Name { get; set; }
-        public Person Teacher { get; set; }
+        public Teacher Teacher { get; set; }
         public List<Person> Students { get; set; }
         public Dictionary<string, float> Rating { get; set; }
     }

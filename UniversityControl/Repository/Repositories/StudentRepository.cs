@@ -41,10 +41,10 @@ namespace Repository.Repositories
 
         public void Delete(int id)
         {
-            Student subject = _db.Students.Find(id);
-            if (subject != null)
+            Student Subject = _db.Students.Find(id);
+            if (Subject != null)
             {
-                _db.Students.Remove(subject);
+                _db.Students.Remove(Subject);
                 _db.SaveChanges();
             }
         }
