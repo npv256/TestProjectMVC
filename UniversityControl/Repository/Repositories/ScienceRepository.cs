@@ -15,6 +15,8 @@ namespace Repository.Repositories
     {
         private readonly dbcontext _db;
 
+        private bool _disposed = false;
+
         public ScienceRepository(dbcontext context)
         {
             _db = context;
@@ -25,11 +27,6 @@ namespace Repository.Repositories
             return _db.Sciences;
         }
 
-        public Science GetItem(int id)
-        {
-            return _db.Sciences.Find(id);
-        }
-
         public Science GetItem(long id)
         {
             return _db.Sciences.Find(id);
@@ -38,22 +35,42 @@ namespace Repository.Repositories
         public void Create(Science item)
         {
             _db.Sciences.Add(item);
-            _db.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void Delete(long id)
         {
             Science property = _db.Sciences.Find(id);
             if (property != null)
             {
                 _db.Sciences.Remove(property);
-                _db.SaveChanges();
             }
         }
 
         public void Update(Science item)
         {
             _db.Entry(item).State = EntityState.Modified;
+        }
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this._disposed)
+            {
+                if (disposing)
+                {
+                    _db.Dispose();
+                }
+            }
+            this._disposed = true;
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public void Save()
+        {
+            _db.SaveChanges();
         }
 
     }

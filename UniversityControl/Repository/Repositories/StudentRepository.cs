@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Repository.Contexts;
+using Repository.IRepostories;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -9,9 +10,11 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
-   public class StudentRepository
+   public class StudentRepository : IRepository<Student>
     {
         private readonly dbcontext _db;
+
+        private bool _disposed = false;
 
         public StudentRepository(dbcontext context)
         {
@@ -23,11 +26,6 @@ namespace Repository.Repositories
             return _db.Students;
         }
 
-        public Student GetItem(int id)
-        {
-            return _db.Students.Find(id);
-        }
-
         public Student GetItem(long id)
         {
             return _db.Students.Find(id);
@@ -36,22 +34,42 @@ namespace Repository.Repositories
         public void Create(Student item)
         {
             _db.Students.Add(item);
-            _db.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void Delete(long id)
         {
             Student Subject = _db.Students.Find(id);
             if (Subject != null)
             {
                 _db.Students.Remove(Subject);
-                _db.SaveChanges();
             }
         }
 
         public void Update(Student item)
         {
             _db.Entry(item).State = EntityState.Modified;
+        }
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this._disposed)
+            {
+                if (disposing)
+                {
+                    _db.Dispose();
+                }
+            }
+            this._disposed = true;
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public void Save()
+        {
+            _db.SaveChanges();
         }
 
     }

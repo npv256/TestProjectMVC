@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.IRepostories
+namespace Service.Interfaces
 {
-    public interface IRepository<T> where T : class
+    public interface IService<T> where T : class
     {
         IEnumerable<T> GetItemList();
         T GetItem(long id);
