@@ -12,7 +12,7 @@ namespace Service.Services
 {
     public class ScienceService : IService<Science>
     {
-        private IRepository<Science> _db;
+        private readonly IRepository<Science> _db;
 
         public ScienceService(IRepository<Science> repository)
         {
@@ -32,6 +32,16 @@ namespace Service.Services
         public void Create(Science item)
         {
             _db.Create(item);
+            if(item.Students!=null && item.Students.Count!=0)
+            {
+                Random rnd = new Random();
+                foreach (var student in item.Students)
+                {
+                    item.Rating.Add(student.Id, rnd.Next(1, 6));
+                    // Генеририуем рандомные оценки студентам
+                }
+            }
+
         }
 
         public void Delete(long s)

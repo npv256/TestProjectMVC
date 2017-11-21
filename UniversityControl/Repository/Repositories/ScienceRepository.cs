@@ -39,10 +39,10 @@ namespace Repository.Repositories
 
         public void Delete(long id)
         {
-            Science property = _db.Sciences.Find(id);
-            if (property != null)
+            Science subject = _db.Sciences.Find(id);
+            if (subject != null)
             {
-                _db.Sciences.Remove(property);
+                _db.Sciences.Remove(subject);
             }
         }
 

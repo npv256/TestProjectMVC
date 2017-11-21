@@ -12,42 +12,47 @@ namespace Service.Services
 {
     public class TeacherService : IService<Teacher>
     {
-        private IRepository<Teacher> _db;
+        private readonly IRepository<Teacher> _dbTeacher;
 
-        public TeacherService(IRepository<Teacher> repository)
+        public TeacherService(IRepository<Teacher> reposTeacher)
         {
-            _db = repository;
+            _dbTeacher = reposTeacher;
         }
 
         public IEnumerable<Teacher> GetItemList()
         {
-            return _db.GetItemList();
+            return _dbTeacher.GetItemList();
         }
 
         public Teacher GetItem(long id)
         {
-            return _db.GetItem(id);
+            return _dbTeacher.GetItem(id);
         }
 
-        public void Create(Teacher item)
+        public void Create(Teacher teacher)
         {
-            _db.Create(item);
+            Hash hashObj = new Hash();
+            Teacher someTeacher = teacher;
+            someTeacher.Password = hashObj.GetHashString(teacher.Password);
+            someTeacher.Role = "Teacher";
+            _dbTeacher.Create(someTeacher);
+
         }
 
         public void Delete(long s)
         {
-            _db.Delete(s);
+            _dbTeacher.Delete(s);
         }
 
 
         public void Update(Teacher item)
         {
-            _db.Update(item);
+            _dbTeacher.Update(item);
         }
 
         public void Save()
         {
-            _db.Save();
+            _dbTeacher.Save();
         }
     }
 }

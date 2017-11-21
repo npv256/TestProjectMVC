@@ -12,7 +12,7 @@ namespace Service.Services
 {
     public class StudentService : IService<Student>
     {
-        private IRepository<Student> _db;
+        private readonly IRepository<Student> _db;
 
         public StudentService(IRepository<Student> repository)
         {
