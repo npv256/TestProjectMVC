@@ -41,7 +41,8 @@ namespace UniversityControl.Controllers
         {
             TeacherModels teacher = new TeacherModels();
             teacher.Students = _studService.GetItemList().ToList();
-            teacher.SelectStudents = new List<Student>();
+            Mapper.Initialize(cfg => cfg.CreateMap<Student, CheckStudentModel>());
+            teacher.StudentsCheck = Mapper.Map<List<Student>, List<CheckStudentModel>>(teacher.Students);
             return View(teacher);
         }
 
@@ -56,8 +57,8 @@ namespace UniversityControl.Controllers
                 {
                     Teacher someTeacher = new Teacher();
                     Science someScience = new Science();
-                    Mapper.Initialize(cfg => cfg.CreateMap<TeacherModels, Teacher>());
-                    someTeacher = Mapper.Map<TeacherModels, Teacher>(teacher);
+                    Mapper.Initialize(cfg => cfg.CreateMap<CheckStudentModel, Student>());
+                    teacher.Students = Mapper.Map<List<CheckStudentModel>, List<Student>>(teacher.StudentsCheck.Where(x=>x.Checked==true).ToList());
                     someScience.Name = teacher.ScienceName;
                     someScience.Students = teacher.Students;
                     someScience.Teacher = someTeacher;

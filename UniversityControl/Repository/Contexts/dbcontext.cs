@@ -28,9 +28,9 @@ namespace Repository.Contexts
             protected override void Seed(dbcontext db)
             {
                 db.Teachers.Add(new Teacher
-                {
+                { 
                     Id = 1,
-                    Login = "1",
+                    Login = "1",                
                     FirstName = "Ivan",
                     LastName = "Ivanov",
                     Password = "06d49632c9dc9bcb62aeaef99612ba6b",

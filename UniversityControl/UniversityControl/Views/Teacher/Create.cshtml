@@ -1,10 +1,10 @@
 ﻿@model UniversityControl.Models.TeacherModels
 
 @{
-    ViewBag.Title = "TeacherView";
+    ViewBag.Title = "Create";
 }
 
-<h2>TeacherView</h2>
+<h2>Create</h2>
 
 
 @using (Html.BeginForm()) 
@@ -54,24 +54,34 @@
                 @Html.ValidationMessageFor(model => model.ScienceName, "", new { @class = "text-danger" })
             </div>
         </div>
+
         <table>
-            @foreach (var el in @Model.Students)
+            @Html.LabelFor(model => model.Students, htmlAttributes: new { @class = "control-label col-md-2" })
+            @for (var i = 0; i < Model.StudentsCheck.Count(); i++)
             {
                 <tr>
+                    
                     <td>
-                        @Html.HiddenFor(x => el.Id)
-                        @*@Html.CheckBoxFor(x => Model.hobbies[idx].IsSelected)*@
-                        @Html.DisplayFor(x => el.FirstName+" "+ el.LastName)
+                        @Html.CheckBoxFor(it => it.StudentsCheck[i].Checked, new {Style = "vertical-            align:3px}"})
+                    </td>
 
+                    <td>
+                        @Html.HiddenFor(it => it.StudentsCheck[i].Id)
+                        @Html.DisplayFor(it => it.StudentsCheck[i].FirstName)
+                        @Html.DisplayFor(it => it.StudentsCheck[i].LastName)
                     </td>
                 </tr>
+
             }
         </table>
+        
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
+
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
         </div>
     </div>
 }

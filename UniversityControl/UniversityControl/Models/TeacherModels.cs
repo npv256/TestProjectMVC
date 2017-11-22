@@ -15,6 +15,12 @@ namespace UniversityControl.Models
         public string LastName { get; set; }
         public string ScienceName { get; set; }
         public List<Student> Students {get;set;}
-        public List<Student> SelectStudents { get; set; }
+        public List<CheckStudentModel> StudentsCheck { get; set; }
+
+        public TeacherModels()
+        {
+            Students = new List<Student>();
+            StudentsCheck = new List<CheckStudentModel>();
+        }
     }
 }
