@@ -1,6 +1,5 @@
 ﻿using Microsoft.Owin;
 using Owin;
-
 [assembly: OwinStartupAttribute(typeof(UniversityControl.Startup))]
 namespace UniversityControl
 {

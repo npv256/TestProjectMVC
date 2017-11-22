@@ -16,8 +16,8 @@ namespace UniversityControl
         {
             // Настройка контекста базы данных, диспетчера пользователей и диспетчера входа для использования одного экземпляра на запрос
             app.CreatePerOwinContext(ApplicationDbContext.Create);
-            app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
-            app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
+         //   app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
+          //  app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
             // Включение использования файла cookie, в котором приложение может хранить информацию для пользователя, выполнившего вход,
             // и использование файла cookie для временного хранения информации о входах пользователя с помощью стороннего поставщика входа
@@ -34,7 +34,7 @@ namespace UniversityControl
                         validateInterval: TimeSpan.FromMinutes(30),
                         regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 }
-            });            
+            });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Позволяет приложению временно хранить информацию о пользователе, пока проверяется второй фактор двухфакторной проверки подлинности.
