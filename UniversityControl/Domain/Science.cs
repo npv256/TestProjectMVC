@@ -18,5 +18,11 @@ namespace Domain
         public Teacher Teacher { get; set; }
         public List<Student> Students { get; set; }
         public Dictionary<long, float> Rating { get; set; }
+
+        public Science()
+        {
+            Students = new List<Student>();
+            Rating = new Dictionary<long, float>();
+        }
     }
 }

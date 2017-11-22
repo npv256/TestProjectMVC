@@ -10,6 +10,11 @@ namespace Service.Services
 {
     public class Hash : IHash
     {
+        public Hash()
+        {
+            
+        }
+
         public string GetHashString(string s)
         {
             //переводим строку в байт-массим  

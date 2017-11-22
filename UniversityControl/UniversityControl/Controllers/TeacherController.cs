@@ -37,28 +37,34 @@ namespace UniversityControl.Controllers
         }
 
         // GET: Teacher/Create
+        [HttpGet]
         public ActionResult Create()
         {
             TeacherModels teacher = new TeacherModels();
             teacher.Students = _studService.GetItemList().ToList();
-            Mapper.Initialize(cfg => cfg.CreateMap<Student, CheckStudentModel>());
-            teacher.StudentsCheck = Mapper.Map<List<Student>, List<CheckStudentModel>>(teacher.Students);
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, CheckStudentModel>());
+            var mapper = config.CreateMapper();
+            teacher.StudentsCheck = mapper.Map<List<Student>, List<CheckStudentModel>>(teacher.Students);
             return View(teacher);
         }
 
         // POST: Teacher/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Login,Password,FirstName,LastName,ScienceName")] TeacherModels teacher)
+        public ActionResult Create( TeacherModels teacher)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    Teacher someTeacher = new Teacher();
                     Science someScience = new Science();
-                    Mapper.Initialize(cfg => cfg.CreateMap<CheckStudentModel, Student>());
-                    teacher.Students = Mapper.Map<List<CheckStudentModel>, List<Student>>(teacher.StudentsCheck.Where(x=>x.Checked==true).ToList());
+                    foreach (var checkStud in teacher.StudentsCheck.Where(sc=>sc.Checked==true))
+                    {
+                        teacher.Students.Add(_studService.GetItem(checkStud.Id));
+                    }
+                    var config = new MapperConfiguration(cfg => cfg.CreateMap<TeacherModels, Teacher>());
+                    var mapper = config.CreateMapper();
+                    Teacher someTeacher = mapper.Map<TeacherModels, Teacher>(teacher);
                     someScience.Name = teacher.ScienceName;
                     someScience.Students = teacher.Students;
                     someScience.Teacher = someTeacher;
@@ -74,7 +80,8 @@ namespace UniversityControl.Controllers
             }
             catch(Exception e)
             {
-                return View();
+               // throw new Exception(e.Message);
+                return View(teacher);
             }
         }
 

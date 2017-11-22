@@ -57,23 +57,30 @@
 
         <table>
             @Html.LabelFor(model => model.Students, htmlAttributes: new { @class = "control-label col-md-2" })
+
             @for (var i = 0; i < Model.StudentsCheck.Count(); i++)
             {
                 <tr>
-                    
+
                     <td>
-                        @Html.CheckBoxFor(it => it.StudentsCheck[i].Checked, new {Style = "vertical-            align:3px}"})
+                        @Html.CheckBoxFor(model => model.StudentsCheck[i].Checked, new { Style = "vertical-            align:3px}" })
+                        @Html.ValidationMessageFor(model => model.StudentsCheck[i].Checked, "", new { @class = "text-danger" })
                     </td>
 
                     <td>
-                        @Html.HiddenFor(it => it.StudentsCheck[i].Id)
-                        @Html.DisplayFor(it => it.StudentsCheck[i].FirstName)
-                        @Html.DisplayFor(it => it.StudentsCheck[i].LastName)
+                        @Html.HiddenFor(model => model.StudentsCheck[i].Id)
+                        @Html.DisplayFor(model => model.StudentsCheck[i].FirstName)
+                        @Html.DisplayFor(model => model.StudentsCheck[i].LastName)
                     </td>
                 </tr>
 
             }
         </table>
+        
+       
+
+
+
         
 
 

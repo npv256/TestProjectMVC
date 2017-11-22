@@ -31,7 +31,6 @@ namespace Service.Services
 
         public void Create(Science item)
         {
-            _db.Create(item);
             if(item.Students!=null && item.Students.Count!=0)
             {
                 Random rnd = new Random();
@@ -40,6 +39,7 @@ namespace Service.Services
                     item.Rating.Add(student.Id, rnd.Next(1, 6));
                     // Генеририуем рандомные оценки студентам
                 }
+                _db.Create(item);
             }
 
         }
