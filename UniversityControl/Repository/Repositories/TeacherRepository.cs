@@ -12,11 +12,11 @@ namespace Repository.Repositories
 {
    public class TeacherRepository : IRepository<Teacher>
     {
-        private readonly dbcontext _db;
+        private readonly UserContext _db;
 
         private bool _disposed = false;
 
-        public TeacherRepository(dbcontext context)
+        public TeacherRepository(UserContext context)
         {
             _db = context;
         }

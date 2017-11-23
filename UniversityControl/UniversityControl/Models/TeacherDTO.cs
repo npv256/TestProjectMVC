@@ -1,26 +1,25 @@
 ﻿using Domain;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
 namespace UniversityControl.Models
 {
-    public class TeacherModels
+    public class TeacherDTO 
     {
+        [Key]
         public long Id { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string ScienceName { get; set; }
-        public List<Student> Students {get;set;}
-        public List<CheckStudentModel> StudentsCheck { get; set; }
+        public ScienceDTO Science { get; set; }
 
-        public TeacherModels()
+        public TeacherDTO()
         {
-            Students = new List<Student>();
-            StudentsCheck = new List<CheckStudentModel>();
+            ScienceDTO Science = new ScienceDTO();
         }
     }
 }

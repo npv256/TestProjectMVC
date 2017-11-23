@@ -13,11 +13,11 @@ namespace Repository.Repositories
 {
    public class ScienceRepository : IRepository<Science>
     {
-        private readonly dbcontext _db;
+        private readonly UserContext _db;
 
         private bool _disposed = false;
 
-        public ScienceRepository(dbcontext context)
+        public ScienceRepository(UserContext context)
         {
             _db = context;
         }

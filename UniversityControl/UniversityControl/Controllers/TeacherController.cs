@@ -26,13 +26,15 @@ namespace UniversityControl.Controllers
         // GET: Teacher
         public ActionResult Index()
         {
-
+            var s = _teachService.GetItemList().Last();
+            var s1 = _studService.GetItemList().Count();
             return View(_teachService.GetItemList());
         }
 
         // GET: Teacher/Details/5
         public ActionResult Details(long id)
         {
+
             return View();
         }
 
@@ -40,38 +42,30 @@ namespace UniversityControl.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            TeacherModels teacher = new TeacherModels();
-            teacher.Students = _studService.GetItemList().ToList();
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, CheckStudentModel>());
+            TeacherDTO teacher = new TeacherDTO();
+            ScienceDTO science = new ScienceDTO();
+            teacher.Science = science;
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, StudentDTO>());
             var mapper = config.CreateMapper();
-            teacher.StudentsCheck = mapper.Map<List<Student>, List<CheckStudentModel>>(teacher.Students);
+            teacher.Science.Students = mapper.Map<List<Student>, List<StudentDTO>>(_studService.GetItemList().ToList());
             return View(teacher);
         }
 
         // POST: Teacher/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create( TeacherModels teacher)
+        public ActionResult Create( TeacherDTO teacher)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    Science someScience = new Science();
-                    foreach (var checkStud in teacher.StudentsCheck.Where(sc=>sc.Checked==true))
-                    {
-                        teacher.Students.Add(_studService.GetItem(checkStud.Id));
-                    }
-                    var config = new MapperConfiguration(cfg => cfg.CreateMap<TeacherModels, Teacher>());
+                    teacher.Science.Students = teacher.Science.Students.Where(st => st.Checked == true).ToList();
+                    var config = new MapperConfiguration(cfg => cfg.CreateMap<TeacherDTO, Teacher>());
                     var mapper = config.CreateMapper();
-                    Teacher someTeacher = mapper.Map<TeacherModels, Teacher>(teacher);
-                    someScience.Name = teacher.ScienceName;
-                    someScience.Students = teacher.Students;
-                    someScience.Teacher = someTeacher;
-                    someTeacher.Science = someScience;
+                    Teacher someTeacher = mapper.Map<TeacherDTO, Teacher>(teacher);
+                    someTeacher.Science.Teacher = someTeacher;
                     _teachService.Create(someTeacher);
-                    _scieService.Create(someScience);
-                    _scieService.Save();
                     _teachService.Save();
                     return RedirectToAction("Index");
                 }
@@ -80,7 +74,6 @@ namespace UniversityControl.Controllers
             }
             catch(Exception e)
             {
-               // throw new Exception(e.Message);
                 return View(teacher);
             }
         }

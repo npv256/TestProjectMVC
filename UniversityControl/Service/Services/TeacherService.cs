@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Repository.IRepostories;
 using Domain;
 using Repository;
+using Repository.Contexts;
+using Repository.Repositories;
 
 namespace Service.Services
 {
@@ -33,10 +35,10 @@ namespace Service.Services
         {
             Hash hashObj = new Hash();
             Teacher someTeacher = teacher;
+            Science someScience = new Science();
             someTeacher.Password = hashObj.GetHashString(teacher.Password);
             someTeacher.Role = "Teacher";
             _dbTeacher.Create(someTeacher);
-
         }
 
         public void Delete(long s)

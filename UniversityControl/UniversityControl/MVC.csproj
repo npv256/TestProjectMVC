@@ -227,13 +227,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\CheckStudentModel.cs" />
+    <Compile Include="Models\StudentDTO.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\ScienceModels.cs" />
-    <Compile Include="Models\StudentModels.cs" />
-    <Compile Include="Models\StudentsCollectionModels.cs" />
-    <Compile Include="Models\TeacherModels.cs" />
+    <Compile Include="Models\ScienceDTO.cs" />
+    <Compile Include="Models\TeacherDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

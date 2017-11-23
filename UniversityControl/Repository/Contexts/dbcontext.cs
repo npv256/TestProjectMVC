@@ -9,22 +9,22 @@ using Domain;
 
 namespace Repository.Contexts
 {
-    public class dbcontext : DbContext
+    public class UserContext : DbContext
     {
 
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Science> Sciences { get; set; }
 
-        public dbcontext() 
+        public UserContext() 
         {
             Database.SetInitializer(new StoreDbInitializer());
         }
 
         // Пересоздает бд при изменении модели
-        public class StoreDbInitializer : DropCreateDatabaseIfModelChanges<dbcontext>
+        public class StoreDbInitializer : DropCreateDatabaseIfModelChanges<UserContext>
         {
-            protected override void Seed(dbcontext db)
+            protected override void Seed(UserContext db)
             {
                 db.Teachers.Add(new Teacher
                 {
