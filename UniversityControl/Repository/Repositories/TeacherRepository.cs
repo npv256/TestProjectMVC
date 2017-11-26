@@ -19,6 +19,7 @@ namespace Repository.Repositories
         public TeacherRepository(UserContext context)
         {
             _db = context;
+            _db.Teachers.Load();
         }
 
         public IEnumerable<Teacher> GetItemList()

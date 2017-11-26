@@ -16,12 +16,10 @@ namespace UniversityControl.Models
         public string Name { get; set; }
         public Teacher Teacher { get; set; }
         public List<StudentDTO> Students { get; set; }
-        public Dictionary<long, float> Rating { get; set; }
 
         public ScienceDTO()
         {
             Students = new List<StudentDTO>();
-            Rating = new Dictionary<long, float>();
         }
     }
 }

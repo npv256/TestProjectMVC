@@ -14,47 +14,51 @@ namespace Service.Services
 {
     public class TeacherService : IService<Teacher>
     {
-        private readonly IRepository<Teacher> _dbTeacher;
 
-        public TeacherService(IRepository<Teacher> reposTeacher)
+        //IRepository<Teacher> _db
+        private readonly IUnitOfWork _db;
+
+        public TeacherService(IUnitOfWork uof)
         {
-            _dbTeacher = reposTeacher;
+            _db = uof;
         }
 
         public IEnumerable<Teacher> GetItemList()
         {
-            return _dbTeacher.GetItemList();
+            return _db.Teachers.GetItemList();
         }
 
         public Teacher GetItem(long id)
         {
-            return _dbTeacher.GetItem(id);
+            return _db.Teachers.GetItem(id);
         }
 
         public void Create(Teacher teacher)
         {
+            var s2 = _db.Students.GetItemList().ToList();
             Hash hashObj = new Hash();
             Teacher someTeacher = teacher;
-            Science someScience = new Science();
             someTeacher.Password = hashObj.GetHashString(teacher.Password);
             someTeacher.Role = "Teacher";
-            _dbTeacher.Create(someTeacher);
+            someTeacher.Science = _db.Sciences.GetItem(teacher.Id);
+            _db.Teachers.Create(someTeacher);
+            var s1 = _db.Students.GetItemList().ToList();
         }
 
         public void Delete(long s)
         {
-            _dbTeacher.Delete(s);
+            _db.Teachers.Delete(s);
         }
 
 
         public void Update(Teacher item)
         {
-            _dbTeacher.Update(item);
+            _db.Teachers.Update(item);
         }
 
         public void Save()
         {
-            _dbTeacher.Save();
+            _db.Save();
         }
     }
 }

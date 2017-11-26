@@ -103,10 +103,12 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Contexts\dbcontext.cs" />
     <Compile Include="IRepostories\IRepository.cs" />
+    <Compile Include="IRepostories\IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ScienceRepository.cs" />
     <Compile Include="Repositories\StudentRepository.cs" />
     <Compile Include="Repositories\TeacherRepository.cs" />
+    <Compile Include="Repositories\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

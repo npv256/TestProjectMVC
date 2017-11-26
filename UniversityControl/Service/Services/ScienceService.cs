@@ -12,47 +12,56 @@ namespace Service.Services
 {
     public class ScienceService : IService<Science>
     {
-        private readonly IRepository<Science> _db;
+        private readonly IUnitOfWork _db;
 
-        public ScienceService(IRepository<Science> repository)
+        public ScienceService(IUnitOfWork db)
         {
-            _db = repository;
+            _db = db;
         }
 
         public IEnumerable<Science> GetItemList()
         {
-            return _db.GetItemList();
+            return _db.Sciences.GetItemList();
         }
 
         public Science GetItem(long id)
         {
-            return _db.GetItem(id);
+            return _db.Sciences.GetItem(id);
         }
 
-        public void Create(Science item)
+        public void Create(Science science)
         {
-            if(item.Students!=null && item.Students.Count!=0)
+            if(science.Students!=null && science.Students.Count!=0)
             {
+                List<Student> selectedStudents =new List<Student>();
+                selectedStudents.AddRange(science.Students); 
+                science.Students.Clear();
                 Random rnd = new Random();
-                foreach (var student in item.Students)
+                foreach (var student in selectedStudents)
                 {
-                    item.Rating.Add(student.Id, rnd.Next(1, 6));
-                    // Генеририуем рандомные оценки студентам
+                    science.Rating.Add(student.Id, rnd.Next(1, 6));
+                    // Генеририуем рандомные оценки студентам.
+                    Student editStud = new Student();
+                    editStud = _db.Students.GetItem(student.Id);
+                    editStud.Sciences.Add(science);
+                    science.Students.Add(editStud);
+                    _db.Students.Update(editStud);
+                    var s = _db.Students.GetItemList().ToList();
                 }
-                _db.Create(item);
+                _db.Sciences.Create(science);
             }
 
         }
 
         public void Delete(long s)
         {
-            _db.Delete(s);
+            _db.Sciences.Delete(s);
         }
 
 
         public void Update(Science item)
         {
-            _db.Update(item);
+            _db.Sciences.Update(item);
         }
 
         public void Save()

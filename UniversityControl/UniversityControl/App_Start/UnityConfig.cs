@@ -5,8 +5,9 @@ using Repository.Repositories;
 using Service.Interfaces;
 using Service.Services;
 using System;
-
+using System.Web.Compilation;
 using Unity;
+using Unity.Injection;
 using Unity.Lifetime;
 
 namespace UniversityControl
@@ -43,6 +44,12 @@ namespace UniversityControl
         /// </remarks>
         public static void RegisterTypes(IUnityContainer container)
         {
+            //  container.RegisterType<UserContext>(new HierarchicalLifetimeManager());
+            var connectionString =
+                  "Data Source=(LocalDb)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\UniversityControl.mdf;Initial Catalog=1as2pnet-UniversityControl;Integrated Security=True;";
+            container.RegisterType<UserContext>(new HierarchicalLifetimeManager(),
+    new InjectionConstructor(connectionString));
+            container.RegisterType<IUnitOfWork, UnitOfWork>();
             container.RegisterType<IHash, Hash>();
             container.RegisterType<IRepository<Student>, StudentRepository>();
             container.RegisterType<IRepository<Teacher>, TeacherRepository>();
@@ -50,7 +57,7 @@ namespace UniversityControl
             container.RegisterType<IService<Student>, StudentService>();
             container.RegisterType<IService<Teacher>, TeacherService>();
             container.RegisterType<IService<Science>, ScienceService>();
-            container.RegisterType<UserContext>(new HierarchicalLifetimeManager());
+            
             // NOTE: To load from web.config uncomment the line below.
             // Make sure to add a Unity.Configuration to the using statements.
             // container.LoadConfiguration();

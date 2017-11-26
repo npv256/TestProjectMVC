@@ -16,15 +16,39 @@ namespace Repository.Contexts
         public DbSet<Student> Students { get; set; }
         public DbSet<Science> Sciences { get; set; }
 
-        public UserContext() 
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Science>()
+                .HasMany(c => c.Students)
+                .WithMany(p => p.Sciences)
+                .Map(m =>
+                {
+            // Ссылка на промежуточную таблицу
+            m.ToTable("StudentSciences");
+
+            // Настройка внешних ключей промежуточной таблицы
+            m.MapLeftKey("ScienceId");
+                    m.MapRightKey("StudentId");
+                });
+        }
+
+        public UserContext()
         {
             Database.SetInitializer(new StoreDbInitializer());
         }
 
-        // Пересоздает бд при изменении модели
-        public class StoreDbInitializer : DropCreateDatabaseIfModelChanges<UserContext>
+        public UserContext(string connectionString)
+            : base(connectionString)
         {
-            protected override void Seed(UserContext db)
+            Database.SetInitializer(new StoreDbInitializer());
+        }
+    }
+
+    public class StoreDbInitializer : DropCreateDatabaseIfModelChanges<UserContext>
+    {
+        protected override void Seed(UserContext db)
+        {
+            try
             {
                 db.Teachers.Add(new Teacher
                 {
@@ -37,6 +61,25 @@ namespace Repository.Contexts
                     Science = null
                 });
 
+                Teacher secondTeacher = new Teacher
+                {
+                    Id = 2,
+                    Password = "06d49632c9dc9bcb62aeaef99612ba6b",
+                    Role = "Teacher",
+                    FirstName = "Oleg",
+                    LastName = "Bayutov",
+                    Login = "Bayutov",
+                };
+
+                Science firstScience = new Science
+                {
+                    Id = secondTeacher.Id,
+                    Name = "Math",
+                    Students = new List<Student>(),
+                    Rating = new Dictionary<long, float>(),
+                    Teacher = secondTeacher
+                };
+
                 Student studentFirst = new Student
                 {
                     Id = 1,
@@ -45,7 +88,8 @@ namespace Repository.Contexts
                     LastName = "Lepokurov",
                     Password = "06d49632c9dc9bcb62aeaef99612ba6b",
                     Role = "Student",
-                    Sciences = new List<Science>(),
+                    Sciences = new List<Science>()
+                    
                 };
 
                 Student studentSecond = new Student
@@ -70,31 +114,19 @@ namespace Repository.Contexts
                     Sciences = new List<Science>()
                 };
 
-                Teacher teacherSecond = new Teacher
-                {
-                    Id = 2,
-                    Password = "06d49632c9dc9bcb62aeaef99612ba6b",
-                    Role = "Teacher",
-                    FirstName = "Oleg",
-                    LastName = "Bayutov",
-                    Login = "Bayutov",
-
-                };
-
-                Science firstScience = new Science
-                {
-                    Id = teacherSecond.Id,
-                    Name = "Math",
-                    Rating = null,
-                    Students = new List<Student>()
-                };
-
-                db.Students.AddRange(new List<Student> { studentFirst, studentSecond, studentThrid });
-                db.Teachers.Add(teacherSecond);
-                firstScience.Students.AddRange(new List<Student> { studentFirst, studentSecond, studentThrid });
+                db.Teachers.Add(secondTeacher);
+                firstScience.Teacher=secondTeacher;
+                db.Students.AddRange(new List<Student> {studentFirst, studentSecond, studentThrid});
                 db.Sciences.Add(firstScience);
                 db.SaveChanges();
+                firstScience.Students = new List<Student> {studentFirst, studentSecond, studentThrid };
+                db.Entry(firstScience).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
 
+                throw;
             }
         }
     }

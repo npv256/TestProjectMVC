@@ -17,6 +17,11 @@ namespace Domain
         public string LastName { get; set; }
         public string Password { get; set; }
         public string Role { get; set; }
-        public List<Science> Sciences = new List<Science>();
+        public List<Science> Sciences { get; set; }
+
+        public Student()
+        {
+            Sciences = new List<Science>();
+        }
     }
 }

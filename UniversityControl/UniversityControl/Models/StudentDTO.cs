@@ -16,9 +16,7 @@ namespace UniversityControl.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Password { get; set; }
-        public string Role { get; set; }
         public bool Checked { get ; set;}
-        public Science Science { get; set; }
 
         public StudentDTO()
         {

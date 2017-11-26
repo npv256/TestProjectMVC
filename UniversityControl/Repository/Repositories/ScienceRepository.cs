@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace Repository.Repositories
 {
    public class ScienceRepository : IRepository<Science>
@@ -20,11 +19,12 @@ namespace Repository.Repositories
         public ScienceRepository(UserContext context)
         {
             _db = context;
+            _db.Sciences.Load();
         }
 
         public IEnumerable<Science> GetItemList()
         {
-            return _db.Sciences;
+            return _db.Sciences.Include(s => s.Students).ToList();
         }
 
         public Science GetItem(long id)
