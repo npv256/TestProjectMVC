@@ -31,22 +31,25 @@ namespace Service.Services
 
         public void Create(Science science)
         {
-            if(science.Students!=null && science.Students.Count!=0)
+            List<Student> checkList = new List<Student>(science.Students);
+            science.Students.Clear();
+            if(checkList.Count != 0)
             {
-                List<Student> selectedStudents =new List<Student>();
-                selectedStudents.AddRange(science.Students); 
-                science.Students.Clear();
                 Random rnd = new Random();
-                foreach (var student in selectedStudents)
+                science.Marks = new List<Mark>();
+                foreach (var student in checkList)
                 {
-                    science.Rating.Add(student.Id, rnd.Next(1, 6));
+                    science.Marks.Add(new Mark()
+                    {
+                         Key = student.Id,
+                         Value = rnd.Next(1, 6)
+                    });
                     // Генеририуем рандомные оценки студентам.
                     Student editStud = new Student();
                     editStud = _db.Students.GetItem(student.Id);
                     editStud.Sciences.Add(science);
                     science.Students.Add(editStud);
                     _db.Students.Update(editStud);
-                    var s = _db.Students.GetItemList().ToList();
                 }
                 _db.Sciences.Create(science);
             }
@@ -59,9 +62,20 @@ namespace Service.Services
         }
 
 
-        public void Update(Science item)
+        public void Update(Science science)
         {
-            _db.Sciences.Update(item);
+            Random rnd = new Random();
+            if (science.Marks.Count == 0)
+                science.Marks = _db.Sciences.GetItem(science.Id).Marks;
+            foreach (var stud in science.Students)
+            {
+                if(science.Marks.First(m=>m.Key==stud.Id)==null) science.Marks.Add(new Mark()
+                {
+                    Key = stud.Id,
+                    Value = rnd.Next(1, 6)
+                });
+            }
+            _db.Sciences.Update(science);
         }
 
         public void Save()

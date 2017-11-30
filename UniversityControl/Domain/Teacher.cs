@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-   public class Teacher// : Person
+   public class Teacher
     {
         [Key]
         public long Id { get; set; }
@@ -16,7 +16,7 @@ namespace Domain
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Password { get; set; }
-        public Science Science { get; set; }
         public string Role { get; set; }
+        public Science Science { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.ModelBinding;
 
 namespace Repository.Repositories
 {
@@ -24,7 +25,7 @@ namespace Repository.Repositories
 
         public IEnumerable<Science> GetItemList()
         {
-            return _db.Sciences.Include(s => s.Students).ToList();
+            return _db.Sciences.Include(s => s.Students).Include(s=>s.Marks).ToList();
         }
 
         public Science GetItem(long id)

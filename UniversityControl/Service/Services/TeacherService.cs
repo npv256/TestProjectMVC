@@ -15,7 +15,6 @@ namespace Service.Services
     public class TeacherService : IService<Teacher>
     {
 
-        //IRepository<Teacher> _db
         private readonly IUnitOfWork _db;
 
         public TeacherService(IUnitOfWork uof)
@@ -35,14 +34,12 @@ namespace Service.Services
 
         public void Create(Teacher teacher)
         {
-            var s2 = _db.Students.GetItemList().ToList();
             Hash hashObj = new Hash();
             Teacher someTeacher = teacher;
             someTeacher.Password = hashObj.GetHashString(teacher.Password);
             someTeacher.Role = "Teacher";
             someTeacher.Science = _db.Sciences.GetItem(teacher.Id);
             _db.Teachers.Create(someTeacher);
-            var s1 = _db.Students.GetItemList().ToList();
         }
 
         public void Delete(long s)
@@ -50,10 +47,12 @@ namespace Service.Services
             _db.Teachers.Delete(s);
         }
 
-
-        public void Update(Teacher item)
+        public void Update(Teacher teacher)
         {
-            _db.Teachers.Update(item);
+            Hash hash = new Hash();
+            teacher.Role = "Teacher";
+            teacher.Password =  hash.GetHashString(teacher.Password);
+            _db.Teachers.Update(teacher);
         }
 
         public void Save()

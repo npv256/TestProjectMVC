@@ -1,17 +1,23 @@
-﻿@model UniversityControl.Models.TeacherDTO
+﻿@model UniversityControl.Models.StudentDTO
 
 @{
-    ViewBag.Title = "Registration of teachers";
+    ViewBag.Title = "Edit";
 }
 
-@using (Html.BeginForm()) 
+<h2>Edit</h2>
+
+
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Teachers</h4>
+        <h4>StudentDTO</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Role)
 
         <div class="form-group">
             @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -45,31 +51,21 @@
             </div>
         </div>
         
-        <div class="form-group">
-            @Html.Label("Science", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Science.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Science, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        
         <table>
-            @Html.LabelFor(model => model.Science.Students, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Sciences, htmlAttributes: new { @class = "control-label col-md-2" })
 
-            @for (var i = 0; i < Model.Science.Students.Count(); i++)
+            @for (var i = 0; i < Model.Sciences.Count(); i++)
             {
                 <tr>
                     <td>
-                        @Html.CheckBoxFor(model => model.Science.Students[i].Checked, new { Style = "vertical-            align:3px}" })
-                        @Html.ValidationMessageFor(model => model.Science.Students[i].Checked)
+                        @Html.CheckBoxFor(model => model.Sciences[i].Checked, new { Style = "vertical-            align:3px}" })
+                        @Html.ValidationMessageFor(model => model.Sciences[i].Checked)
                     </td>
 
                     <td>
-                        @Html.HiddenFor(model => model.Science.Students[i].Id)
-                        @Html.HiddenFor(model => model.Science.Students[i].FirstName)
-                        @Html.DisplayFor(model => model.Science.Students[i].FirstName)
-                        @Html.HiddenFor(model => model.Science.Students[i].LastName)
-                        @Html.DisplayFor(model => model.Science.Students[i].LastName)
+                        @Html.HiddenFor(model => model.Sciences[i].Id)
+                        @Html.HiddenFor(model => model.Sciences[i].Name)
+                        @Html.DisplayFor(model => model.Sciences[i].Name)
                     </td>
                 </tr>
 
@@ -78,7 +74,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>

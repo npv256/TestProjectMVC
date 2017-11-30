@@ -14,15 +14,14 @@ namespace Domain
         [Key]
         public long Id { get; set; }
         public string Name { get; set; }
-       // public long? TeacherId { get; set; }
         public Teacher Teacher { get; set; }
         public List<Student> Students { get; set; }
-        public Dictionary<long, float> Rating { get; set; }
+        public virtual ICollection<Mark> Marks { get; set; }
 
         public Science()
         {
+            Marks = new List<Mark>();
             Students = new List<Student>();
-            Rating = new Dictionary<long, float>();
         }
     }
 }

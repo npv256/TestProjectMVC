@@ -24,7 +24,7 @@ namespace Repository.Repositories
 
         public IEnumerable<Student> GetItemList()
         {
-            return _db.Students;
+            return _db.Students.Include(s => s.Sciences).ToList();
         }
 
         public Student GetItem(long id)

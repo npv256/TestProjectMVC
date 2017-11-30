@@ -19,17 +19,17 @@ namespace Repository.Repositories
         public TeacherRepository(UserContext context)
         {
             _db = context;
-            _db.Teachers.Load();
         }
 
         public IEnumerable<Teacher> GetItemList()
         {
-            return _db.Teachers;
+            return _db.Teachers.Include(s=>s.Science).Include(s=>s.Science.Students);
         }
 
         public Teacher GetItem(long id)
         {
-            return _db.Teachers.Find(id);
+            var teachers = _db.Teachers.Include(s => s.Science).Include(s => s.Science.Students);
+            return teachers.First(teacher =>teacher.Id == id);
         }
 
         public void Create(Teacher item)

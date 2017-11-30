@@ -23,54 +23,108 @@ namespace UniversityControl.Controllers
             _scieService = scieService;
         }
 
+        public TeacherDTO CreateTeacherDto(TeacherDTO teacher)
+        {
+                TeacherDTO teacherDto = new TeacherDTO();
+            if (teacher != null)
+            {
+               teacherDto = teacher;
+            }
+            ScienceDTO scienceDto = new ScienceDTO();
+            teacherDto = teacher;
+            teacherDto.Science = scienceDto;
+            var studentsDomain = _studService.GetItemList().ToList();
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, StudentCheckModel>().MaxDepth(3));
+            var mapper = config.CreateMapper();
+            teacherDto.Science.Students.AddRange(mapper.Map<List<Student>, List<StudentCheckModel>>(studentsDomain));
+            return teacherDto;
+        }
+
         // GET: Teacher
         public ActionResult Index()
         {
-            _studService.GetItemList();
-            var asd = _scieService.GetItemList().Last();
-            var ssq = _teachService.GetItemList().Last();
-          var s =  _studService.GetItemList().ToList();
-          var s2 =  _scieService.GetItemList().ToList();
-            var s3 = _teachService.GetItemList();
-            return View(_teachService.GetItemList());
+            var s = _scieService.GetItemList().ToList();
+            return View(_teachService.GetItemList().Skip(1));
         }
 
         // GET: Teacher/Details/5
         public ActionResult Details(long id)
         {
-
-            return View();
+            Teacher teacherDomain = _teachService.GetItem(id);
+            TeacherDTO teacherDto = new TeacherDTO();
+            ScienceDTO scienceDto = new ScienceDTO();
+            teacherDto.Science = scienceDto;
+            teacherDto.FirstName = teacherDomain.FirstName;
+            teacherDto.LastName = teacherDomain.LastName;
+            teacherDto.Id = teacherDomain.Id;
+            teacherDto.Login = teacherDomain.Login;
+            teacherDto.Password = teacherDto.Password;
+            teacherDto.Role = teacherDomain.Role;
+            teacherDto.Science.Name = teacherDomain.Science.Name;
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, StudentCheckModel>().MaxDepth(3));
+            var mapper = config.CreateMapper();
+            teacherDto.Science.Students.AddRange(mapper.Map<List<Student>, List<StudentCheckModel>>(_scieService.GetItem(id).Students));
+            foreach (var stud in teacherDto.Science.Students)
+            {
+                teacherDto.Science.Students.First(st => st.Id == stud.Id).Checked = true;
+            }
+            return View(teacherDto);
         }
 
         // GET: Teacher/Create
         [HttpGet]
         public ActionResult Create()
         {
-            TeacherDTO teacher = new TeacherDTO();
-            ScienceDTO science = new ScienceDTO();
-            teacher.Science = science;
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, StudentDTO>());
-            var mapper = config.CreateMapper();
-            teacher.Science.Students = mapper.Map<List<Student>, List<StudentDTO>>(_studService.GetItemList().ToList());
-            return View(teacher);
+                TeacherDTO teacherDto = new TeacherDTO();
+                return View(CreateTeacherDto(teacherDto));
         }
 
         // POST: Teacher/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create( TeacherDTO teacher)
+        public ActionResult Create([Bind(Include = "Login,Password,FirstName,LastName,Science,Students")] TeacherDTO teacher)
         {
             try
             {
-                if (ModelState.IsValid)
+
+                var userLogins = _teachService.GetItemList().Select(t=>t.Login).ToList();
+                userLogins.AddRange(_studService.GetItemList().Select(t => t.Login).ToList());
+                if (userLogins.Contains(teacher.Login) && _teachService.GetItem(teacher.Id).Login!=teacher.Login)
                 {
-                    teacher.Science.Students = teacher.Science.Students.Where(st => st.Checked == true).ToList();
-                    var config = new MapperConfiguration(cfg => cfg.CreateMap<TeacherDTO, Teacher>()
-                    .ForMember("Science", opt => opt.MapFrom(c => c.Science))
-                    );
+                    ModelState.AddModelError("Login", "User with such login already exists");
+                    return View(CreateTeacherDto(teacher));
+                }
+
+                if (!teacher.Science.Students.Select(s=>s.Checked).Contains(true))
+                {
+                    ModelState.AddModelError("", "Not one student is selected");
+                    return View(CreateTeacherDto(teacher));
+                }
+
+                var scienceNames = _scieService.GetItemList().Select(s => s.Name);
+                if (scienceNames.Contains(teacher.Science.Name))
+                {
+                    ModelState.AddModelError("Science", "This science alredy exests");
+                    return View(CreateTeacherDto(teacher));
+                }
+
+                if (ModelState.IsValid)
+                {   
+                    var config = new MapperConfiguration(cfg => cfg.CreateMap<TeacherDTO, Teacher>().ForMember(s=>s.Science,opt=>opt.Ignore()));
                     var mapper = config.CreateMapper();
                     Teacher someTeacher = mapper.Map<TeacherDTO, Teacher>(teacher);
-                    someTeacher.Science.Teacher = someTeacher;
+                    Science someScience = new Science
+                    {
+                        Id = teacher.Science.Id,
+                        Name = teacher.Science.Name
+                    };
+                    someTeacher.Science = someScience;
+                    var checkedList = teacher.Science.Students.Where(st => st.Checked == true).ToList();
+                    someTeacher.Science.Students = new List<Student>();
+                    foreach (var student in checkedList)
+                    {
+                        someTeacher.Science.Students.Add(_studService.GetItem(student.Id));
+                    }
                     _scieService.Create(someTeacher.Science);
                     _teachService.Create(someTeacher);
                     _teachService.Save();
@@ -79,7 +133,7 @@ namespace UniversityControl.Controllers
 
                 return RedirectToAction("Index");
             }
-            catch(Exception e)
+            catch(AutoMapperConfigurationException e)
             {
                 return View(teacher);
             }
@@ -88,67 +142,80 @@ namespace UniversityControl.Controllers
         // GET: Teacher/Edit/5
         public ActionResult Edit(long id)
         {
-            TeacherDTO teacher = new TeacherDTO();
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Teacher, TeacherDTO>());
+            ScienceDTO scienceDto = new ScienceDTO();
+            Teacher teacherDomain = _teachService.GetItem(id);
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Teacher, TeacherDTO>().ForMember(t=>t.Science,opt=>opt.Ignore()));
             var mapper = config.CreateMapper();
-            teacher = mapper.Map<Teacher, TeacherDTO>(_teachService.GetItem(id));
-            config = new MapperConfiguration(cfg => cfg.CreateMap<Student, StudentDTO>());
-            mapper = config.CreateMapper();
-            teacher.Science.Students = mapper.Map<List<Student>, List<StudentDTO>>(_studService.GetItemList().ToList());
-            foreach (var stud in _scieService.GetItem(id).Students)
+            TeacherDTO teacherDto = mapper.Map<Teacher, TeacherDTO>(teacherDomain);
+            teacherDto.Password = "";
+            teacherDto.Science = scienceDto;
+            teacherDto.Science.Id = teacherDomain.Science.Id;
+            teacherDto.Science.Name = teacherDomain.Science.Name;
+            foreach (var stud in _studService.GetItemList())
             {
-                teacher.Science.Students.First(st => st.Id == stud.Id).Checked = true;
+                StudentCheckModel studCheck = new StudentCheckModel
+                {
+                    Id = stud.Id,
+                    FirstName = stud.FirstName,
+                    LastName = stud.LastName
+                };
+                if (teacherDomain.Science.Students.Select(s => s.Id).Contains(stud.Id))
+                    studCheck.Checked = true;
+                teacherDto.Science.Students.Add(studCheck);
             }
-            teacher.Password = "";
-            return View(teacher);
+            return View(teacherDto);
+
         }
 
         // POST: Teacher/Edit/5
         [HttpPost]
-        public ActionResult Edit(TeacherDTO teacher)
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "Id,Login,Password,FirstName,LastName,Science,Students")] TeacherDTO teacherDto)
         {
             try
             {
-                if (ModelState.IsValid)
+                if (!teacherDto.Science.Students.Select(s => s.Checked).Contains(true))
                 {
-                    teacher.Science.Students = teacher.Science.Students.Where(st => st.Checked == true).ToList();
-                    Teacher someTeacher = _teachService.GetItem(teacher.Id);
-                    var config = new MapperConfiguration(cfg => cfg.CreateMap<TeacherDTO, Teacher>());
-                    var mapper = config.CreateMapper();
-                    someTeacher = mapper.Map<TeacherDTO, Teacher>(teacher);
-                  //  someTeacher.Role = _teachService.GetItemList().First(t => t.Login == someTeacher.Login).Role;
-                    someTeacher.Science.Teacher = someTeacher;
-                    someTeacher.Science.Id = someTeacher.Id;
-                    _scieService.Update(someTeacher.Science);
-                    _teachService.Update(someTeacher);
-                    _teachService.Save();
-
-                    return RedirectToAction("Index");
+                    ModelState.AddModelError("", "Not one student is selected");
+                    return View(CreateTeacherDto(teacherDto));
                 }
+                if (ModelState.IsValid)
+                    {
+                        Teacher teacherDomain = _teachService.GetItem(teacherDto.Id);
+                        teacherDomain.FirstName = teacherDto.FirstName;
+                        teacherDomain.LastName = teacherDto.LastName;
+                        teacherDomain.Password = teacherDto.Password;
+
+                        Science scienceDomain = _scieService.GetItem(teacherDto.Id);
+                        scienceDomain.Name = teacherDto.Science.Name;
+                        scienceDomain.Students.Clear();
+                        foreach (var stud in teacherDto.Science.Students.Where(s => s.Checked == true))
+                        {
+                            scienceDomain.Students.Add(_studService.GetItem(stud.Id));
+                        }
+
+                        teacherDomain.Science = scienceDomain;
+                        scienceDomain.Teacher = teacherDomain;
+                        _scieService.Update(scienceDomain);
+                        _teachService.Update(teacherDomain);
+                        _scieService.Save();
+                        return RedirectToAction("Index");
+                    }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                return View(teacher);
+                return View(CreateTeacherDto(teacherDto));
             }
-            return View(teacher);
+            return View(teacherDto);
         }
 
         // GET: Teacher/Delete/5
         public ActionResult Delete(long id)
         {
-            try
-            {
                 if (_teachService.GetItem(id) != null)
                     _teachService.Delete(id);
                 _teachService.Save();
-                // TODO: Add delete logic here
-
                 return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

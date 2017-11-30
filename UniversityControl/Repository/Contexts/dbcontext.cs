@@ -76,7 +76,7 @@ namespace Repository.Contexts
                     Id = secondTeacher.Id,
                     Name = "Math",
                     Students = new List<Student>(),
-                    Rating = new Dictionary<long, float>(),
+                    Marks = new List<Mark>(),
                     Teacher = secondTeacher
                 };
 
@@ -120,6 +120,15 @@ namespace Repository.Contexts
                 db.Sciences.Add(firstScience);
                 db.SaveChanges();
                 firstScience.Students = new List<Student> {studentFirst, studentSecond, studentThrid };
+                Random rnd = new Random();
+                foreach (var stud in firstScience.Students)
+                {
+                    firstScience.Marks.Add(new Mark()
+                    {
+                        Key = stud.Id,
+                        Value = rnd.Next(1, 6)
+                    });
+                }
                 db.Entry(firstScience).State = EntityState.Modified;
                 db.SaveChanges();
             }

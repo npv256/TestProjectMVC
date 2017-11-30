@@ -58,17 +58,17 @@ namespace Repository.Repositories
             _db.SaveChanges();
         }
 
-        private bool disposed = false;
+        private bool _disposed = false;
 
         public virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!this._disposed)
             {
                 if (disposing)
                 {
                     _db.Dispose();
                 }
-                this.disposed = true;
+                this._disposed = true;
             }
         }
 

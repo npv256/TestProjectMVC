@@ -13,13 +13,15 @@ namespace UniversityControl.Models
         [ForeignKey("TeacherDTO")]
         [Key]
         public long Id { get; set; }
+        [Required]
         public string Name { get; set; }
         public Teacher Teacher { get; set; }
-        public List<StudentDTO> Students { get; set; }
+        [Required]
+        public List<StudentCheckModel> Students { get; set; }
 
         public ScienceDTO()
         {
-            Students = new List<StudentDTO>();
+            Students = new List<StudentCheckModel>();
         }
     }
 }
