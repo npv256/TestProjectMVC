@@ -24,6 +24,7 @@ namespace UniversityControl.Controllers
             _scieService = scieService;
         }
 
+
         public StudentDTO CreateStudentDto(StudentDTO student)
         {
             StudentDTO studentDto = new StudentDTO();
@@ -45,6 +46,7 @@ namespace UniversityControl.Controllers
         }
 
         // GET: Student/Details/5
+        [Authorize(Roles = "admin")]
         public ActionResult Details(int id)
         {
             StudentDTO studentDto = new StudentDTO();

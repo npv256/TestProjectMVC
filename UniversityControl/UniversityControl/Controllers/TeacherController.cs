@@ -41,9 +41,9 @@ namespace UniversityControl.Controllers
         }
 
         // GET: Teacher
+        [Authorize]
         public ActionResult Index()
         {
-            var s = _scieService.GetItemList().ToList();
             return View(_teachService.GetItemList().Skip(1));
         }
 
