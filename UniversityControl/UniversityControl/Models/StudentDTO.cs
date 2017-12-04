@@ -23,6 +23,7 @@ namespace UniversityControl.Models
         [Required]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Длина строки должна быть от 3 до 50 символов")]
         public string Password { get; set; }
+        public double AverageBall { get; set; }
         public List<ScienceCheckModel> Sciences { get; set; }
 
         public StudentDTO()

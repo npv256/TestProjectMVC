@@ -39,14 +39,13 @@ namespace Service.Services
                 science.Marks = new List<Mark>();
                 foreach (var student in checkList)
                 {
+                    // Генеририуем рандомные оценки студентам.
                     science.Marks.Add(new Mark()
                     {
                          Key = student.Id,
-                         Value = rnd.Next(1, 6)
+                         Value = rnd.Next(1, 6),
                     });
-                    // Генеририуем рандомные оценки студентам.
-                    Student editStud = new Student();
-                    editStud = _db.Students.GetItem(student.Id);
+                    var editStud = _db.Students.GetItem(student.Id);
                     editStud.Sciences.Add(science);
                     science.Students.Add(editStud);
                     _db.Students.Update(editStud);
@@ -69,11 +68,16 @@ namespace Service.Services
                 science.Marks = _db.Sciences.GetItem(science.Id).Marks;
             foreach (var stud in science.Students)
             {
-                if(science.Marks.First(m=>m.Key==stud.Id)==null) science.Marks.Add(new Mark()
+                if(science.Marks.First(m=>m.Key==stud.Id)==null)
                 {
-                    Key = stud.Id,
-                    Value = rnd.Next(1, 6)
-                });
+                    science.Marks.Add(new Mark()
+                    {
+                        Key = stud.Id,
+                        Value = rnd.Next(1, 6)
+                    });
+                    _db.Students.Update(stud);
+                }
+
             }
             _db.Sciences.Update(science);
         }

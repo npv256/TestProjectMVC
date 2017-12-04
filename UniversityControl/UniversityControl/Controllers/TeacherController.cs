@@ -13,10 +13,10 @@ namespace UniversityControl.Controllers
 {
     public class TeacherController : Controller
     {
-        readonly IService<Student> _studService;
+        readonly IStudentService<Student> _studService;
         readonly IService<Teacher> _teachService;
         readonly IService<Science> _scieService;
-        public TeacherController(IService<Teacher> teachService, IService<Science> scieService, IService<Student> studService)
+        public TeacherController(IService<Teacher> teachService, IService<Science> scieService, IStudentService<Student> studService)
         {
             _studService = studService;
             _teachService = teachService;
@@ -216,6 +216,24 @@ namespace UniversityControl.Controllers
                     _teachService.Delete(id);
                 _teachService.Save();
                 return RedirectToAction("Index");
+        }
+
+        public ActionResult ReportAllStudents()
+        {
+            var countStudents = _studService.GetItemList().Count();
+            List<Teacher> teachers = new List<Teacher>(_teachService.GetItemList()
+                .Where(t => t.Science != null)
+                .Where(t => t.Science.Students.Count == countStudents).ToList());
+            return View(teachers);
+        }
+
+        public ActionResult ReportMinStudents()
+        {
+            List<Teacher> teachers = new List<Teacher>(_teachService.GetItemList().Where(t => t.Science != null)
+                .OrderByDescending(t => t.Science.Students.Count).ToList());
+            var countMin = teachers.Last().Science.Students.Count;
+            teachers = teachers.Where(t => t.Science.Students.Count == countMin).ToList();
+            return View(teachers);
         }
     }
 }

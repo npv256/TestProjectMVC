@@ -10,7 +10,7 @@ using Repository.IRepostories;
 
 namespace Service.Services
 {
-    public class StudentService : IService<Student>
+    public class StudentService : IStudentService<Student>
     {
         private readonly IUnitOfWork _db;
 
@@ -26,17 +26,16 @@ namespace Service.Services
 
         public Student GetItem(long id)
         {
-            var s = getAverageBall(_db.Students.GetItem(id));
             return _db.Students.GetItem(id);
         }
 
         public void Create(Student item)
         {
             Hash hash = new Hash();
-            Student student = new Student();
-            student = item;
+            var student = item;
             student.Role = "Student";
             student.Password = hash.GetHashString(student.Password);
+            student.AverageBal = GetAverageBall(student);
             _db.Students.Create(item);
         }
 
@@ -49,29 +48,27 @@ namespace Service.Services
         public void Update(Student item)
         {
             Hash hash = new Hash();
-            Student student = new Student();
-            student = item;
+            var student = item;
             student.Role = "Student";
             student.Password = hash.GetHashString(student.Password);
             foreach (var science in student.Sciences)
             {
                 _db.Sciences.Update(science);
             }
-            _db.Students.Update(item);
+            student.AverageBal = GetAverageBall(student);
+            _db.Students.Update(student);
         }
 
-        public double getAverageBall(Student student)
+        public double GetAverageBall(Student student)
         {
             var summ = 0.0;
-            var count = 0;
             var sciences = _db.Sciences.GetItemList().Where(sc => sc.Students.Exists(st => st.Id == student.Id)).ToList();
             foreach (var science in sciences)
             {
-                summ += science.Marks.First(m=>m.Key==student.Id).Value;
-                count++;
+                summ += science.Marks.First(m => m.Key == student.Id).Value;
             }
-            var result = summ/count;
-            return Math.Round(result,2);
+            var result = summ / sciences.Count;
+            return Math.Round(result, 2);
         }
 
         public void Save()

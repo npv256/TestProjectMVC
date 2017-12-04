@@ -11,10 +11,10 @@ namespace UniversityControl.Controllers
 {
     public class ManageController : Controller
     {
-        readonly IService<Student> _studService;
+        readonly IStudentService<Student> _studService;
         readonly IService<Teacher> _teachService;
 
-        public ManageController(IService<Teacher> teachService, IService<Student> studService, IHash hash)
+        public ManageController(IService<Teacher> teachService, IStudentService<Student> studService, IHash hash)
         {
             _studService = studService;
             _teachService = teachService;

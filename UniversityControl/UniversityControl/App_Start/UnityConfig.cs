@@ -54,7 +54,7 @@ namespace UniversityControl
             container.RegisterType<IRepository<Student>, StudentRepository>();
             container.RegisterType<IRepository<Teacher>, TeacherRepository>();
             container.RegisterType<IRepository<Science>, ScienceRepository>();
-            container.RegisterType<IService<Student>, StudentService>();
+            container.RegisterType<IStudentService<Student>, StudentService>();
             container.RegisterType<IService<Teacher>, TeacherService>();
             container.RegisterType<IService<Science>, ScienceService>();
             

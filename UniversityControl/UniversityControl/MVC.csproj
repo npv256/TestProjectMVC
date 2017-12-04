@@ -232,6 +232,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\InfoDadaModels.cs" />
     <Compile Include="Models\LoginModels.cs" />
+    <Compile Include="Models\PageViewModels.cs" />
     <Compile Include="Models\ScienceCheckModel.cs" />
     <Compile Include="Models\StudentCheckModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -255,6 +256,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="ClassDiagram1.cd" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -301,6 +303,9 @@
     <Content Include="Views\Student\Details.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Manage\Info.cshtml" />
+    <Content Include="Views\Teacher\ReportAllStudents.cshtml" />
+    <Content Include="Views\Teacher\ReportMinStudents.cshtml" />
+    <Content Include="Views\Student\ReportAverageBal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

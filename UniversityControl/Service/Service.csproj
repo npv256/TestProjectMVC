@@ -103,6 +103,7 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Interfaces\IHash.cs" />
     <Compile Include="Interfaces\IService.cs" />
+    <Compile Include="Interfaces\IStudentService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Hash.cs" />
     <Compile Include="Services\ScienceService.cs" />

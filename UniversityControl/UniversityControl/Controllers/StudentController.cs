@@ -13,11 +13,11 @@ namespace UniversityControl.Controllers
     public class StudentController : Controller
     {
 
-        readonly IService<Student> _studService;
+        readonly IStudentService<Student> _studService;
         readonly IService<Teacher> _teachService;
         readonly IService<Science> _scieService;
 
-        public StudentController(IService<Teacher> teachService, IService<Science> scieService, IService<Student> studService)
+        public StudentController(IService<Teacher> teachService, IService<Science> scieService, IStudentService<Student> studService)
         {
             _studService = studService;
             _teachService = teachService;
@@ -41,7 +41,7 @@ namespace UniversityControl.Controllers
 
         // GET: Student
         public ActionResult Index()
-        { 
+        {
             return View(_studService.GetItemList());
         }
 
@@ -186,6 +186,13 @@ namespace UniversityControl.Controllers
                 _studService.Delete(id);
             _studService.Save();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult ReportAverageBal()
+        {
+            var allAverageBalls = _studService.GetItemList().Sum(s => s.AverageBal)/_studService.GetItemList().Count();
+            var goodStudents = _studService.GetItemList().TakeWhile(t => t.AverageBal > allAverageBalls);
+            return View(goodStudents);
         }
     }
 }

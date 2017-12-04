@@ -9,6 +9,5 @@ namespace UniversityControl.Models
     {
         public int Students { get; set; }
         public int Teachers { get; set; }
-
     }
 }

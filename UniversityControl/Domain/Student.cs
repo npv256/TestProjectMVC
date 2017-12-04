@@ -17,6 +17,7 @@ namespace Domain
         public string LastName { get; set; }
         public string Password { get; set; }
         public string Role { get; set; }
+        public double AverageBal { get; set; }
         public List<Science> Sciences { get; set; }
 
         public Student()
