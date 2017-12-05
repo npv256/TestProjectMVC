@@ -13,11 +13,11 @@ namespace UniversityControl.Controllers
 {
     public class AccountController : Controller
     {
-        readonly IService<Student> _studService;
+        readonly IStudentService<Student> _studService;
         readonly IService<Teacher> _teachService;
         private readonly IHash _hash;
 
-        public AccountController(IService<Teacher> teachService, IService<Student> studService, IHash hash)
+        public AccountController(IService<Teacher> teachService, IStudentService<Student> studService, IHash hash)
         {
             _studService = studService;
             _hash = hash;

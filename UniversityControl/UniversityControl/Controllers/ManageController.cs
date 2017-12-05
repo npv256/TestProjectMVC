@@ -34,7 +34,6 @@ namespace UniversityControl.Controllers
                 var id = _teachService.GetItemList().First(s => s.Login == User.Identity.Name).Id;
                 return RedirectToAction("Details", "Teacher", new {@id = id});
             }
-
             return View();
         }
 
@@ -43,7 +42,7 @@ namespace UniversityControl.Controllers
             InfoDadaModels infoNow = new InfoDadaModels()
             {
                 Students = _studService.GetItemList().Count(),
-                Teachers = _teachService.GetItemList().Count()
+                Teachers = _teachService.GetItemList().Count()-1
             };
             return PartialView(infoNow);
         }

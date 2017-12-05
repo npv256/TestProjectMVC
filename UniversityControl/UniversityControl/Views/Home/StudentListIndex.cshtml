@@ -1,0 +1,115 @@
+﻿@model PagedList.IPagedList<Domain.Student>
+
+@{
+    ViewBag.Title = "Students";
+}
+
+<h2>All STUDENTS</h2>
+
+@using (Html.BeginForm())
+{
+    <p>
+        Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search"/>
+    </p>
+    <select name="minFilter">
+        <option value="0" selected="selected">Min Average bal</option>
+        <option value="1">
+            1
+        </option>
+        <option value="2">
+            2
+        </option>
+        <option value="3">
+            3
+        </option>
+        <option value="4">
+            4
+        </option>
+        <option value="5">
+            5
+        </option>
+    </select>
+
+    <select name="maxFilter">
+        <option value="5" selected="selected">Max Average bal</option>
+        <option value="1">
+            1
+        </option>
+        <option value="2">
+            2
+        </option>
+        <option value="3">
+            3
+        </option>
+        <option value="4">
+            4
+        </option>
+        <option value="5">
+            5
+        </option>
+    </select>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("First Name", "StudentListIndex", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Last Name", "StudentListIndex", new { sortOrder = ViewBag.LastNameSortParm, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Average bal", "StudentListIndex", new { sortOrder = ViewBag.AverageBalSortParm, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter })
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AverageBal)
+            </td>
+        </tr>
+    }
+</table>
+
+<div>
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+        of @Model.PageCount
+
+        @if (Model.HasPreviousPage)
+        {
+            @Html.ActionLink("<<", "StudentListIndex", new {page = 1, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter})
+            @Html.Raw(" ")
+            ;
+            @Html.ActionLink("< Prev", "StudentListIndex", new {page = Model.PageNumber - 1, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter})
+        }
+        else
+        {
+            @:<<
+            @Html.Raw(" ")
+            ;
+            @:< Prev
+        }
+
+        @if (Model.HasNextPage)
+        {
+            @Html.ActionLink("Next >", "StudentListIndex", new {page = Model.PageNumber + 1, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter})
+            @Html.Raw(" ")
+            ;
+            @Html.ActionLink(">>", "StudentListIndex", new {page = Model.PageCount, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter})
+        }
+        else
+        {
+            @:Next >
+            @Html.Raw(" ")
+            @:>>
+        }
+</div>

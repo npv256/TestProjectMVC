@@ -23,7 +23,7 @@ namespace UniversityControl.Controllers
             _scieService = scieService;
         }
 
-        public TeacherDTO CreateTeacherDto(TeacherDTO teacher)
+        private TeacherDTO CreateTeacherDto(TeacherDTO teacher)
         {
                 TeacherDTO teacherDto = new TeacherDTO();
             if (teacher != null)
@@ -41,6 +41,7 @@ namespace UniversityControl.Controllers
         }
 
         // GET: Teacher
+        [Authorize(Roles = "admin")]
         [Authorize]
         public ActionResult Index()
         {
@@ -48,6 +49,7 @@ namespace UniversityControl.Controllers
         }
 
         // GET: Teacher/Details/5
+        [Authorize(Roles = "Teacher")]
         public ActionResult Details(long id)
         {
             Teacher teacherDomain = _teachService.GetItem(id);
@@ -72,6 +74,7 @@ namespace UniversityControl.Controllers
         }
 
         // GET: Teacher/Create
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public ActionResult Create()
         {
@@ -80,6 +83,7 @@ namespace UniversityControl.Controllers
         }
 
         // POST: Teacher/Create
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Login,Password,FirstName,LastName,Science,Students")] TeacherDTO teacher)
@@ -140,6 +144,7 @@ namespace UniversityControl.Controllers
         }
 
         // GET: Teacher/Edit/5
+        [Authorize(Roles = "admin")]
         public ActionResult Edit(long id)
         {
             ScienceDTO scienceDto = new ScienceDTO();
@@ -168,6 +173,7 @@ namespace UniversityControl.Controllers
         }
 
         // POST: Teacher/Edit/5
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Login,Password,FirstName,LastName,Science,Students")] TeacherDTO teacherDto)
@@ -210,6 +216,7 @@ namespace UniversityControl.Controllers
         }
 
         // GET: Teacher/Delete/5
+        [Authorize(Roles = "admin")]
         public ActionResult Delete(long id)
         {
                 if (_teachService.GetItem(id) != null)
@@ -218,6 +225,7 @@ namespace UniversityControl.Controllers
                 return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "admin")]
         public ActionResult ReportAllStudents()
         {
             var countStudents = _studService.GetItemList().Count();
@@ -227,6 +235,7 @@ namespace UniversityControl.Controllers
             return View(teachers);
         }
 
+        [Authorize(Roles = "admin")]
         public ActionResult ReportMinStudents()
         {
             List<Teacher> teachers = new List<Teacher>(_teachService.GetItemList().Where(t => t.Science != null)

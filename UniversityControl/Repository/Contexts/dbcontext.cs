@@ -44,7 +44,7 @@ namespace Repository.Contexts
         }
     }
 
-    public class StoreDbInitializer : DropCreateDatabaseIfModelChanges<UserContext>
+    public class StoreDbInitializer : DropCreateDatabaseAlways<UserContext>
     {
         protected override void Seed(UserContext db)
         {
@@ -123,11 +123,14 @@ namespace Repository.Contexts
                 Random rnd = new Random();
                 foreach (var stud in firstScience.Students)
                 {
+                    var bal = rnd.Next(1, 6);
                     firstScience.Marks.Add(new Mark()
                     {
                         Key = stud.Id,
-                        Value = rnd.Next(1, 6)
+                        Value = bal
                     });
+                    stud.AverageBal = bal;
+                    db.Entry(stud).State = EntityState.Modified;
                 }
                 db.Entry(firstScience).State = EntityState.Modified;
                 db.SaveChanges();

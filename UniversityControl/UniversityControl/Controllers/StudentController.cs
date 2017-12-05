@@ -25,7 +25,7 @@ namespace UniversityControl.Controllers
         }
 
 
-        public StudentDTO CreateStudentDto(StudentDTO student)
+        private StudentDTO CreateStudentDto(StudentDTO student)
         {
             StudentDTO studentDto = new StudentDTO();
             if (student != null)
@@ -46,7 +46,7 @@ namespace UniversityControl.Controllers
         }
 
         // GET: Student/Details/5
-        [Authorize(Roles = "admin")]
+        [Authorize]
         public ActionResult Details(int id)
         {
             StudentDTO studentDto = new StudentDTO();
@@ -65,6 +65,7 @@ namespace UniversityControl.Controllers
         }
 
         // GET: Student/Create
+        [Authorize(Roles = "Teacher")]
         public ActionResult Create()
         {
                 StudentDTO studentDto = new StudentDTO();
@@ -73,6 +74,7 @@ namespace UniversityControl.Controllers
 
         // POST: Student/Create
         [HttpPost]
+        [Authorize(Roles = "Teacher")]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Login,Password,FirstName,LastName,Sciences")]StudentDTO studentDto)
         {
@@ -118,6 +120,7 @@ namespace UniversityControl.Controllers
         }
 
         // GET: Student/Edit/5
+        [Authorize(Roles = "Teacher")]
         public ActionResult Edit(int id)
         {
             StudentDTO studentDto = new StudentDTO();
@@ -136,6 +139,7 @@ namespace UniversityControl.Controllers
         }
 
         // POST: Student/Edit/5
+        [Authorize(Roles = "Teacher")]
         [HttpPost]
         public ActionResult Edit([Bind(Include = "Id,Login,Password,FirstName,LastName,Sciences")]StudentDTO studentDto)
         {
@@ -179,7 +183,7 @@ namespace UniversityControl.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Teacher")]
         public ActionResult Delete(int id)
         {
             if (_studService.GetItem(id) != null)
@@ -188,10 +192,11 @@ namespace UniversityControl.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "admin")]
         public ActionResult ReportAverageBal()
         {
-            var allAverageBalls = _studService.GetItemList().Sum(s => s.AverageBal)/_studService.GetItemList().Count();
-            var goodStudents = _studService.GetItemList().TakeWhile(t => t.AverageBal > allAverageBalls);
+            var allAverageBals = _studService.GetItemList().Sum(s => s.AverageBal)/_studService.GetItemList().Count();
+            var goodStudents = _studService.GetItemList().TakeWhile(t => t.AverageBal > allAverageBals).ToList();
             return View(goodStudents);
         }
     }
