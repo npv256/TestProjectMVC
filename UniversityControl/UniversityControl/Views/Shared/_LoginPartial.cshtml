@@ -7,7 +7,10 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li>
+                @if (!User.IsInRole("admin"))
+                {
                 @Html.ActionLink(User.Identity.GetUserName(), "Index", "Manage")
+                }
             </li>
             <li><a href="javascript:document.getElementById('logoutForm').submit()">Log out</a></li>
         </ul>

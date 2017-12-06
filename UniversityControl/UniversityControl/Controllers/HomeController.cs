@@ -86,6 +86,7 @@ namespace UniversityControl.Controllers
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "FirstName desc" : "";
             ViewBag.LastNameSortParm = sortOrder == "LastName" ? "LastName desc" : "LastName";
             ViewBag.CountSortParm = sortOrder == "Count" ? "Count desc" : "Count";
+            ViewBag.ScienceSortParm = sortOrder == "Science" ? "Science desc" : "Science";
             ViewBag.MinFilter = minFilter;
             ViewBag.MaxFilter = maxFilter;
             if (Request.HttpMethod == "GET")
@@ -116,6 +117,12 @@ namespace UniversityControl.Controllers
                     break;
                 case "Count desc":
                     teachers = teachers.OrderByDescending(s => s.Science.Students.Count);
+                    break;
+                case "Science":
+                    teachers = teachers.OrderBy(s => s.Science.Name);
+                    break;
+                case "Science desc":
+                    teachers = teachers.OrderByDescending(s => s.Science.Name);
                     break;
                 case "LastName":
                     teachers = teachers.OrderBy(s => s.LastName);

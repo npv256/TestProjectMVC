@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
 using Domain;
+using Microsoft.Ajax.Utilities;
 using Service.Interfaces;
 using UniversityControl.Models;
 
@@ -40,6 +41,7 @@ namespace UniversityControl.Controllers
         }
 
         // GET: Student
+        [Authorize(Roles = "Teacher,admin")]
         public ActionResult Index()
         {
             return View(_studService.GetItemList());
@@ -49,10 +51,9 @@ namespace UniversityControl.Controllers
         [Authorize]
         public ActionResult Details(int id)
         {
-            StudentDTO studentDto = new StudentDTO();
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, StudentDTO>().ForMember(s => s.Sciences, opt => opt.Ignore()));
             var mapper = config.CreateMapper();
-            studentDto = mapper.Map<Student, StudentDTO>(_studService.GetItem(id));
+            StudentDTO studentDto = mapper.Map<Student, StudentDTO>(_studService.GetItem(id));
             config = new MapperConfiguration(cfg => cfg.CreateMap<Science, ScienceCheckModel>());
             mapper = config.CreateMapper();
             studentDto.Sciences = mapper.Map<List<Science>, List<ScienceCheckModel>>(_scieService.GetItemList().ToList());
@@ -65,7 +66,7 @@ namespace UniversityControl.Controllers
         }
 
         // GET: Student/Create
-        [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = "Teacher,admin")]
         public ActionResult Create()
         {
                 StudentDTO studentDto = new StudentDTO();
@@ -74,7 +75,7 @@ namespace UniversityControl.Controllers
 
         // POST: Student/Create
         [HttpPost]
-        [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = "Teacher,admin")]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Login,Password,FirstName,LastName,Sciences")]StudentDTO studentDto)
         {
@@ -95,13 +96,12 @@ namespace UniversityControl.Controllers
                         return View(CreateStudentDto(studentDto));
                     }
 
-                    Student studentDomain = new Student();
                     studentDto.Sciences = studentDto.Sciences.Where(s => s.Checked == true).ToList();
                     var config =
                         new MapperConfiguration(
                             cfg => cfg.CreateMap<StudentDTO, Student>().ForMember(s => s.Sciences, opt => opt.Ignore()));
                     var mapper = config.CreateMapper();
-                    studentDomain = mapper.Map<StudentDTO, Student>(studentDto);
+                    Student studentDomain = mapper.Map<StudentDTO, Student>(studentDto);
                     studentDomain.Sciences.Clear();
                     foreach (var science in studentDto.Sciences)
                     {
@@ -120,13 +120,12 @@ namespace UniversityControl.Controllers
         }
 
         // GET: Student/Edit/5
-        [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = "Teacher,admin")]
         public ActionResult Edit(int id)
         {
-            StudentDTO studentDto = new StudentDTO();
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, StudentDTO>().ForMember(s => s.Sciences, opt => opt.Ignore()));
             var mapper = config.CreateMapper();
-            studentDto = mapper.Map<Student, StudentDTO>(_studService.GetItem(id));
+            StudentDTO studentDto = mapper.Map<Student, StudentDTO>(_studService.GetItem(id));
             config = new MapperConfiguration(cfg => cfg.CreateMap<Science, ScienceCheckModel>());
             mapper = config.CreateMapper();
             studentDto.Sciences = mapper.Map<List<Science>, List<ScienceCheckModel>>(_scieService.GetItemList().ToList());
@@ -139,7 +138,7 @@ namespace UniversityControl.Controllers
         }
 
         // POST: Student/Edit/5
-        [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = "Teacher,admin")]
         [HttpPost]
         public ActionResult Edit([Bind(Include = "Id,Login,Password,FirstName,LastName,Sciences")]StudentDTO studentDto)
         {
@@ -160,8 +159,7 @@ namespace UniversityControl.Controllers
                         return View(CreateStudentDto(studentDto));
                     }
                     studentDto.Sciences = studentDto.Sciences.Where(s => s.Checked == true).ToList();
-                    Student studentDomain = new Student();
-                    studentDomain = _studService.GetItem(studentDto.Id);
+                    Student studentDomain = _studService.GetItem(studentDto.Id);
                     studentDomain.Password = studentDto.Password;
                     studentDomain.Login = studentDto.Login;
                     studentDomain.FirstName = studentDto.FirstName;
@@ -183,7 +181,7 @@ namespace UniversityControl.Controllers
             }
         }
 
-        [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = "Teacher,admin")]
         public ActionResult Delete(int id)
         {
             if (_studService.GetItem(id) != null)
@@ -192,11 +190,11 @@ namespace UniversityControl.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Teacher,admin")]
         public ActionResult ReportAverageBal()
         {
             var allAverageBals = _studService.GetItemList().Sum(s => s.AverageBal)/_studService.GetItemList().Count();
-            var goodStudents = _studService.GetItemList().TakeWhile(t => t.AverageBal > allAverageBals).ToList();
+            var goodStudents = _studService.GetItemList().Where(t => t.AverageBal > allAverageBals).ToList();
             return View(goodStudents);
         }
     }

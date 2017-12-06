@@ -1,42 +1,34 @@
 ﻿using System;
 using System.Linq;
-using System.Web.Security;
-using UniversityControl.Models;
-using System.Data.Entity;
 using Domain;
-using Service.Interfaces;
 using Repository.Contexts;
 using Repository.Repositories;
+using System.Web.Security;
 
-namespace UniversityControl.Providers
+namespace Repository.Providers
 {
     public class CustomRoleProvider : RoleProvider
     {
-        private readonly TeacherRepository _teachers;
-        private readonly StudentRepository _students;
-        public CustomRoleProvider()
-        {
-            UserContext _db = new UserContext();
-            _teachers = new TeacherRepository(_db);
-            _students = new StudentRepository(_db);
-        }
 
         public override string[] GetRolesForUser(string username)
         {
-            string[] roles;
-            Teacher user = _teachers.GetItemList().First(t => t.Login == username);
-
-            if (user != null && user.Role != null)
+            string[] roles = new string[] { };
+            using (UserContext db = new UserContext("DefaultConnection"))
             {
-                roles = new string[] {user.Role};
-            }
-            else
-            {
-                Student student = _students.GetItemList().First(t => t.Login == username);
-                roles = new string[] {student.Role};
-            }
+                Teacher teacher = db.Teachers.FirstOrDefault(u => u.Login == username);
 
-            return roles;
+                if (teacher != null)
+                {
+                    roles = new string[] { teacher.Role};
+                }
+                else
+                {
+                    Student student = db.Students.FirstOrDefault(u => u.Login == username);
+                    if (student != null) roles = new string[] {student.Role};
+                }
+
+                return roles;
+            }
         }
 
         public override void CreateRole(string roleName)

@@ -53,16 +53,16 @@
 <table class="table">
     <tr>
         <th>
-            @Html.ActionLink("First Name", "StudentListIndex", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter })
+            @Html.ActionLink("First Name", "TeacherListIndex", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter })
         </th>
         <th>
-            @Html.ActionLink("Last Name", "StudentListIndex", new { sortOrder = ViewBag.LastNameSortParm, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter })
+            @Html.ActionLink("Last Name", "TeacherListIndex", new { sortOrder = ViewBag.LastNameSortParm, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter })
         </th>
         <th>
-            @Html.ActionLink("Science", "StudentListIndex", new { sortOrder = ViewBag.AverageBalSortParm, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter })
+            @Html.ActionLink("Science", "TeacherListIndex", new { sortOrder = ViewBag.ScienceSortParm, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter })
         </th>
         <th>
-            @Html.ActionLink("Students count", "StudentListIndex", new { sortOrder = ViewBag.AverageBalSortParm, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter })
+            @Html.ActionLink("Students count", "TeacherListIndex", new { sortOrder = ViewBag.CountSortParm, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter })
         </th>
         <th></th>
     </tr>
@@ -95,7 +95,7 @@
         @Html.ActionLink("<<", "TeacherListIndex", new { page = 1, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter })
         @Html.Raw(" ")
         ;
-        @Html.ActionLink("< Prev", "TeacherListIndex", new { page = Model.PageNumber - 1, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter })
+        @Html.ActionLink("< Prev", "TeacherListIndex", new { page = Model.PageNumber - 1, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter })
     }
     else
     {

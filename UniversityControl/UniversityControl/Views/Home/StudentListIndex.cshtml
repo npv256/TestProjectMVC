@@ -89,7 +89,7 @@
             @Html.ActionLink("<<", "StudentListIndex", new {page = 1, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter})
             @Html.Raw(" ")
             ;
-            @Html.ActionLink("< Prev", "StudentListIndex", new {page = Model.PageNumber - 1, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter})
+            @Html.ActionLink("< Prev", "StudentListIndex", new {page = Model.PageNumber - 1, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, minFilter = ViewBag.minFilter, maxFilter = ViewBag.maxFilter })
         }
         else
         {

@@ -25,7 +25,7 @@ namespace UniversityControl.Controllers
 
         private TeacherDTO CreateTeacherDto(TeacherDTO teacher)
         {
-                TeacherDTO teacherDto = new TeacherDTO();
+                TeacherDTO teacherDto;
             if (teacher != null)
             {
                teacherDto = teacher;
