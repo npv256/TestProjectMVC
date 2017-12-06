@@ -8,7 +8,7 @@ using Domain;
 
 namespace Repository.Contexts
 {
-    public class StoreDbInitializer : DropCreateDatabaseIfModelChanges<UserContext>
+    public class StoreDbInitializer : CreateDatabaseIfNotExists<UserContext>
     {
         protected override void Seed(UserContext db)
         {

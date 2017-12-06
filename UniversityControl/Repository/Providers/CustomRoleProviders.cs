@@ -13,7 +13,7 @@ namespace Repository.Providers
         public override string[] GetRolesForUser(string username)
         {
             string[] roles = new string[] { };
-            using (UserContext db = new UserContext("DefaultConnection"))
+            using (UserContext db = new UserContext("UserContext"))
             {
                 Teacher teacher = db.Teachers.FirstOrDefault(u => u.Login == username);
 

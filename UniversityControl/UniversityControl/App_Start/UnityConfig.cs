@@ -46,7 +46,7 @@ namespace UniversityControl
         {
             //  container.RegisterType<UserContext>(new HierarchicalLifetimeManager());
             var connectionString =
-                  "Data Source=(LocalDb)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\UniversityControl.mdf;Initial Catalog=1as2pnet-UniversityControl;Integrated Security=True;";
+                  "Data Source=(LocalDb)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\UniversityControl.mdf;";
             container.RegisterType<UserContext>(new HierarchicalLifetimeManager(),
     new InjectionConstructor(connectionString));
             container.RegisterType<IUnitOfWork, UnitOfWork>();
